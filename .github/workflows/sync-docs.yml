@@ -1,0 +1,40 @@
+name: Sync docs to documents-box
+
+on:
+  push:
+    branches: [main, staging, testing]
+    paths:
+      - "docs/**"
+
+env:
+  SERVICE_NAME: p-000
+  DOCS_REPO: YOUR_GITHUB_USERNAME/documents-box  # <-- cambia esto
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout microservice
+        uses: actions/checkout@v4
+
+      - name: Checkout documents-box
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.DOCS_REPO }}
+          token: ${{ secrets.GH_PAT }}
+          path: documents-box
+
+      - name: Copy docs
+        run: |
+          mkdir -p documents-box/${{ env.SERVICE_NAME }}
+          cp -r docs/. documents-box/${{ env.SERVICE_NAME }}/
+
+      - name: Commit and push
+        working-directory: documents-box
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.SERVICE_NAME }}/
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "docs(${{ env.SERVICE_NAME }}): sync from ${{ github.sha }}"
+          git push
