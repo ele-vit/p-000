@@ -8,7 +8,7 @@ on:
 
 env:
   SERVICE_NAME: p-000
-  DOCS_REPO: YOUR_GITHUB_USERNAME/documents-box  # <-- cambia esto
+  DOCS_REPO: ele-vit/documents-box  # <-- cambia esto
 
 jobs:
   sync:
