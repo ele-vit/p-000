@@ -35,3 +35,4 @@ sequenceDiagram
 | GET | `/` | Health check |
 | GET | `/items` | Lista todos los ítems |
 | GET | `/items/{id}` | Obtiene un ítem por ID |
+
