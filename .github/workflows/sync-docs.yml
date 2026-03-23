@@ -26,15 +26,17 @@ jobs:
 
       - name: Copy docs
         run: |
-          mkdir -p documents-box/${{ env.SERVICE_NAME }}
-          cp -r docs/. documents-box/${{ env.SERVICE_NAME }}/
+          BRANCH=${GITHUB_REF_NAME}
+          mkdir -p documents-box/${BRANCH}/${{ env.SERVICE_NAME }}
+          cp -r docs/. documents-box/${BRANCH}/${{ env.SERVICE_NAME }}/
 
       - name: Commit and push
         working-directory: documents-box
         run: |
+          BRANCH=${GITHUB_REF_NAME}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ${{ env.SERVICE_NAME }}/
+          git add ${BRANCH}/${{ env.SERVICE_NAME }}/
           git diff --cached --quiet && echo "No changes" && exit 0
-          git commit -m "docs(${{ env.SERVICE_NAME }}): sync from ${{ github.sha }}"
+          git commit -m "docs(${{ env.SERVICE_NAME }}): sync ${BRANCH} from ${{ github.sha }}"
           git push
